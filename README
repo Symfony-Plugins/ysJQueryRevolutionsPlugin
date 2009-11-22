@@ -1,0 +1,466 @@
+ysJQueryRevolutionsPlugin
+=========================
+
+The ysJQueryRevolutionsPlugin provides support for jquery
+in your app views; Importing the jquery library and simplifies HTML document
+traversing, event handling, animating, and Ajax interactions for rapid
+web development. Everything from PHP code (Symfony helpers).
+jQuery and Symfony write less, do more.
+
+*Installation*
+--------------
+
+  * Install the plugin (from http://plugins.symfony-project.com)
+
+		$ symfony plugin-install http://www.symfony-project.org/plugins/ysJQueryRevolutionsPlugin
+
+  * Install the plugin (from .tgz file)<br>
+	Download the .tgz from <br>
+	http://www.symfony-project.org/plugins/ysJQueryRevolutionsPlugin<br>
+	execute command:<br>
+
+		php symfony plugin:install path/to/ysJQueryRevolutionsPlugin-.x.x.x.tgz
+
+  * Enable modules in your `settings.yml` (optional for demos)
+
+		[yml]
+		all:
+		 .settings:
+		   enabled_modules:      [default, jquery_demo]
+
+  * Enable the plugin if necessary by editing config/ProjectConfiguration.class.php:
+
+		[php]
+		$this->enablePlugins('ysJQueryRevolutionsPlugin');
+
+  * Publish plugin assets:
+
+		php symfony plugin:publish-assets
+
+  * Clear you cache
+
+		symfony cc
+
+  * See the app.yml to change where you load the library jquery (Optional)
+
+		[yml]
+		all:
+		  .ys_jquery_revolutions_plugins:
+			### To load jQuery from ajax.googleapis.com:
+			### - jquery.min.js
+			#ys_jquery_path: http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js
+			### - jquery.js
+			#ys_jquery_path: http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js
+
+			### To load jQuery from localhost
+			### - Only available jquery.min.js
+			ys_jquery_path: /ysJQueryRevolutionsPlugin/js/jquery/jquery-1.3.2.min.js
+
+			### Uses structured configuration if you use plugins.
+			#ys_jquery_web_dir: ysJQueryRevolutionsPlugin
+			#ys_jquery_js_dir:  jquery
+			#ys_jquery_core: jquery-1.3.2.min.js
+			#ys_jquery_plugins_folder: plugins
+			#ys_jquery_js_folder:  js
+			#ys_jquery_css_folder: css
+			#ys_jquery_images_folder: images
+			#path_separattor:       '/'
+
+
+<br><br>
+HELPERS
+-------
+
+  * **ysJQueryRevolutionsHelper** (Recommended): generates the following jQuery syntax
+
+		[javascript]
+		jQuery('jquery-selector').event();
+
+  * **ysJQueryRevolutionsHelper**: generates the following jQuery syntax
+
+		[javascript]
+		$('jquery-selector').event();
+
+  * **ysUtilHelper**: Add this helper in your wiews to support the php functions
+	json_encode() and boolean_for_javascript() php functions on Symfony 1.0.x
+
+	**IMPORTANT**: If you use these helpers very often is advisable to add in the
+	settings.yml
+
+		[yml]
+		all:
+		  .settings:
+		    standard_helpers:       [Partial, Cache, Form, Javascript, ysJQueryRevolutions]
+
+<br><br>
+HOW TO USE
+----------
+*The Helper **like_function()**:*
+Is a helper to represent a javascript function.
+First Parameter is the body functions.
+Second Parameter are the functions arguments.
+
+	[php]
+	<?php echo like_function(
+				"alert('Hello + ' myArg1); alert('Hello + ' myArg2)",
+				"myArg1, myArg2")?>
+
+	//javascript code generated
+	function(myArg1, myArg2){
+	alert('Hello + ' myArg1); alert('Hello + ' myArg2);
+	}
+
+<br>
+*The Helper **eval_function()**:*
+Is a helper to represent the javascript eval() function.
+First Parameter is the body functions.
+
+	[php]
+	<?php echo eval_function(
+				like_function(
+				  "alert('Hello + ' myArg1); alert('Hello + ' myArg2)",
+				  "myArg1, myArg2"))?>
+
+	//javascript code generated
+
+	eval("function(myArg1, myArg2){
+	alert('Hello + ' myArg1); alert('Hello + ' myArg2);
+	})";
+
+<br>
+*Adding **click** event:*
+
+	[php]
+	<?php echo add_jquery_support(
+				'#jQuerySelector',  // You can use any jquery Selector '# . : < >' ...
+				'click' ,   // events 'click' , 'change' , 'dblclick' ...
+				like_function("alert('Hello World')")); ?>
+
+	<input type="button" id="exampleId" value="Click me" />
+
+<br>
+*Symfony Helper inside javascript code (use jquery_support() not add_jquery_support() )*
+
+	[php]
+	<?php echo core_init_javasacript_tag() ?>  // <= <script language="javascript" type="text/javascript">
+	   var jsVar = 'Hello world';
+	<?php echo jquery_support(
+				'#jQuerySelector',
+				'click' ,
+				like_function("alert(jsVar)"); ?>
+	<?php echo core_end_javasacript_tag() ?>   // <= </script>
+
+	<input type="button" id="exampleId" value="Click me" />
+
+<br><br>
+**AJAX SUPPORT**
+<br>
+*jquery_ajax()*
+Load a remote page using an HTTP request
+
+	[php]
+	<?php echo jquery_ajax(array(
+				'url' => url_for('module/action')
+				'data' => "'varName=value'", // See the double and simple quotes
+				'type' => 'POST'));
+	?>
+
+<br>
+*jquery_periodically_ajax()*
+
+	[php]
+	<?php echo core_init_javasacript_tag() ?>
+		<?php echo jquery_periodically_ajax(array(
+					'url' => url_for('module/action'),
+					'dataType' => 'json' ,
+					'success' =>  like_function("alert(data)" , 'data'),
+					'data' => "'varName=' + Math.ceil(Math.random() * 3)",
+					'frequency' => 5)); // <- Default value is 10 seconds
+		?>
+	<?php echo core_end_javasacript_tag() ?>
+
+	//OR
+
+	<?php echo jquery_ajax(array(
+				'url' => url_for('module/action')
+				'data' => "'varName=value'", // See the double and simple quotes
+				'type' => 'POST'
+				'frequency' => 3));  <- No default value
+	?>
+
+<br>
+*Ajax call on Click Event*
+
+	[php]
+	<?php echo add_jquery_support(
+			   '#jQuerySelector',
+			   'click' ,
+			   like_function(
+			     jquery_ajax(array(
+				   'url' => url_for('module/action')
+				   'data' => "'varName=value'", // See the double and simple quotes
+		           'type' => 'POST'))));  ?>
+	<a id="exampleId">To Remote Function</a>
+
+<br>
+*Ajax events and another way to add click event*
+
+	[php]
+	<?php echo jquery_ajax(array(
+				'listener' => array(
+					'selector' => '#jQuerySelector',
+					'event' => 'click'),
+				'url' => url_for('module/action'),
+				'dataType' => 'json' ,
+				'data' => "'varName'=5",
+				'type' => 'POST',
+				'complete' => like_function("alert('complete')" ),
+				'success' => like_function("alert(data)" , 'data'),
+				'async' => 'true',
+				'beforeSend' => like_function("alert('beforeSend')"),
+				'error' => like_function("alert('error')")));
+	?>
+
+<br>
+*jQuery Submit form with jquery_ajax_form()*
+
+	[php]
+	<?php echo jquery_ajax_form(
+				  '#myForm',
+				  array(
+					'url' => url_for('module/action'),
+					'success' =>  like_function("alert('Submit success')" , 'data'),
+					'type' => 'POST')) ?>
+
+<br><br>
+**OTHERS AJAX HELPERS:**
+<br>
+  * **jquery_ajax_setup()**
+	Setup global settings for AJAX requests
+<br>
+
+	[php]
+	<?php echo  jquery_ajax_setup(
+					array(
+						'type' => 'json',)) ?>
+<br>
+
+
+<br>
+  * **jquery_ajax_get_request()**<br>
+	Load a remote page using an HTTP GET request
+<br>
+
+	[php]
+	<?php echo  jquery_ajax_get_request(
+					array(
+						'listener' => array(
+							'selector' => 'document',
+							'event'    => 'ready'),
+						'url' => url_for('module/action'),
+						'callback' => like_function('alert("GET: Data SUCCESS: " + data);', 'data'),
+						//'type' => 'json',
+						'data'    => array ('varName' => 'value'))) ?>
+
+<br>
+
+<br>
+  * **jquery_ajax_post_request()**<br>
+	Load a remote page using an HTTP POST request
+<br>
+
+	[php]
+	<?php echo jquery_ajax_post_request(
+				array(
+					'listener' => array(
+						'selector' => 'document',
+						'event'    => 'ready'),
+					'url' => url_for('module/action'),
+					'callback' => like_function('alert("POST: Data SUCCESS: " + data);', 'data'),
+					//'type' => 'json',
+					'data'    => array ('varName' => 'value'))) ?>
+
+<br>
+
+<br>
+  * **jquery_load()**<br>
+	Load HTML from a remote file and inject it into the DOM
+<br>
+
+	[php]
+	<?php echo jquery_load(
+            '#spnLoadResult',
+            array(
+                'listener' => array(
+                    'selector' => '#jQuerySelector',
+                    'event'    => 'click'),
+                'url' => url_for('module/action'),
+                'callback' => like_function('alert("Data Loaded!")'),
+                'data'    => array ('varName' => 'value'))) ?>
+
+<br>
+
+<br>
+  * **jquery_get_json():**<br>
+	Load JSON data using an HTTP GET request
+<br>
+
+	[php]
+	<?php  echo  jquery_get_json(
+				  array(
+					'listener' => array(
+					  'selector' => '#jQuerySelector',
+					  'event'    => 'click'),
+					'url' => url_for('module/action'),
+					'callback' => like_function('alert(data)', 'data'),
+					'data'    => array ('varName' => 'value')))  ?>
+
+<br>
+
+<br>
+  * **jquery_get_script():**<br>
+	Load JSON data using an HTTP GET request
+<br>
+
+	[php]
+	<?php  echo  jquery_get_script(
+				  array(
+					'listener' => array(
+					  'selector' => '#jQuerySelector',
+					  'event'    => 'click'),
+					'url' => url_for('module/action'),
+					'callback' => like_function('alert(data)', 'data')))  ?>
+
+<br>
+  * **jquery_ajax_event():** <br>
+	Attach a function to be executed whenever an AJAX request completes , fails
+	is sent,request begins ,requests have ended and completes successfully
+	<br>
+
+	[php]
+	<?php	echo jquery_ajax_event(
+			   '#jQuerySelector',
+			   'ajaxComplete',
+			   like_function("alert('Complete')")); ?>
+	<?php	echo jquery_ajax_event(
+			   '#jQuerySelector',
+			   'ajaxSend',
+			   like_function("alert('Send')", 'event,request,settings'));?>
+	<?php	echo jquery_ajax_event(
+			   '#jQuerySelector',
+			   'ajaxStop',
+			   like_function("alert('Stop')", 'event,request,settings'));?>
+	<?php	echo jquery_ajax_event(
+			   '#jQuerySelector',
+			   'ajaxSuccess',
+			   like_function("alert('Success')", 'event,request,settings'));?>
+	<?php	echo jquery_ajax_event(
+			   '#jQuerySelector',
+			   'ajaxStart',
+			   like_function("alert('Start')", 'event,request,settings'));?>
+	<?php	echo jquery_ajax_event(
+			   '#jQuerySelector',
+			   'ajaxError',
+			   like_function("alert('Error')", 'event,request,settings'));?>
+
+<br><br>
+
+
+**EFFECTS SUPPORT**
+<br>
+*jquery_execute_effect()*
+
+	[php]
+	jquery_execute_effect('#imageId',  // jquery Selector
+	  'fadeOut' ,  // event
+	  array('speed' => 'fast',
+	'callback' => "alert('Event Excuted')")
+
+*Adding effect on click event*
+
+	[php]
+	<?php echo add_jquery_support(
+			   '#exampleId',
+			   'click' ,
+			   like_function(
+			     jquery_execute_effect(
+				   '#sfImg' ,
+				   'fadeIn' ,
+				   array('speed' => '900')))) ?>
+
+	<input type="button" id="exampleId" value="Click me" />
+	<img id="sfImg" alt="Debug toolbar" src="/sf/sf_web_debug/images/sf.png"/>
+
+*Adding effect on Double Click event with callback*
+
+	[php]
+	<?php echo add_jquery_support(
+				'#exampleId',
+				'dblclick' ,
+				like_function(
+				  jquery_execute_effect(
+				    '#sfImg',
+				    'fadeOut' ,
+					array(
+					  'speed' => 'fast',
+					  'callback' => "alert('Event Excuted')")))) ?>
+
+	<input type="button" id="exampleId" value="Hide Image" />
+	<img id="sfImg" alt="Debug toolbar" src="/sf/sf_web_debug/images/sf.png"/>
+
+
+**IMPORTANT:** See the demo module for more documentation and source code.
+<br><br><br>
+
+**AVAILABLES HELPERS**
+
+  * CORE [documentation](http://docs.jquery.com "jQuery")
+	* core_init_javasacript_tag
+	* core_end_javasacript_tag
+	* add_jquery_support
+	* jquery_support
+	* like_function
+	* eval_function
+	* jquery_serialize
+	* jquery_serialize_array
+	* jquery_get()
+	* jquery_set()
+
+  * AJAX [documentation](http://docs.jquery.com/Ajax "Ajax")
+	* jquery_ajax
+	* jquery_ajax_setup
+	* jquery_ajax_get_request
+	* jquery_ajax_post_request
+	* jquery_load
+	* jquery_get_json
+	* jquery_get_script
+	* jquery_ajax_event
+	* jquery_periodically_ajax
+	* jquery_ajax_form
+
+  * EFFECTS [documentation](http://docs.jquery.com/Effects "Effects")
+	* jquery_execute_effect
+
+  * EVENTS [documentation](http://docs.jquery.com/Events "Events")
+	* jquery_live_event()
+	* jquery_die_event()
+	* jquery_toggle_event()
+	* jquery_hover_event()
+	* jquery_bind_event()
+	* jquery_one_event()
+	* jquery_unbind_event()
+	* jquery_trigger_event()
+	* jquery_trigger_handler_event()
+
+
+*Todo*
+-------
+
+  * Fix bugs
+  * Adding support for popular jquery plugins
+
+*Changelog*
+-----------
+***2009-22-11 0.0.1 BETA***
+
+ * oyepez003: Initial release

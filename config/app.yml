@@ -1,0 +1,21 @@
+all:
+  .ys_jquery_revolutions_plugins:
+    ### To load jQuery from ajax.googleapis.com:
+    ### - jquery.min.js
+    #ys_jquery_path: http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js
+    ### - jquery.js
+    #ys_jquery_path: http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js
+
+    ### To load jQuery from localhost
+    ### - Only available jquery.min.js
+    ys_jquery_path: /ysJQueryRevolutionsPlugin/js/jquery/jquery-1.3.2.min.js
+
+    ### Uses structured configuration if you use plugins.
+    #ys_jquery_web_dir: ysJQueryRevolutionsPlugin
+    #ys_jquery_js_dir:  jquery
+    #ys_jquery_core: jquery-1.3.2.min.js
+    #ys_jquery_plugins_folder: plugins
+    #ys_jquery_js_folder:  js
+    #ys_jquery_css_folder: css
+    #ys_jquery_images_folder: images
+    #path_separattor:       '/'

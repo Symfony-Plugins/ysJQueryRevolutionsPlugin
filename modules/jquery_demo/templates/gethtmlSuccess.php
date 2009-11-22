@@ -1,0 +1,1 @@
+<strong>Hello World!!! <?php echo date ( "Y-m-j h:i:s A" );?></strong>
