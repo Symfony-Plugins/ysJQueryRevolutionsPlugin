@@ -69,6 +69,30 @@ if (!function_exists('json_encode'))
   }
 }
 
-
-
-
+function set_jquery_plugins_configuration_files($id, $type = ''){
+  $jqueryPlugins = sfConfig::get('app_ys_jquery_plugins', null);
+  $jqueryPluginInfo = $jqueryPlugins[$id];
+  if($jqueryPluginInfo != null){
+    $jsDir = '';
+    $cssDir = '';
+    if($jqueryPluginInfo['local']){
+      $jsDir =  sfConfig::get('app_ys_jquery_plugins_folder', null) . '/';
+      $cssDir =  sfConfig::get('app_ys_jquery_css', null) . '/';
+    }
+    if($type == '' || strtolower($type) == 'js'){
+      if(isset($jqueryPluginInfo['js_files']) && is_array($jqueryPluginInfo['js_files'])){
+        foreach($jqueryPluginInfo['js_files'] as $jsFile){
+          add_js($jsFile, $jsDir, 'last');
+        }
+      }
+    }
+    if($type == '' || strtolower($type) == 'css'){
+      if(isset($jqueryPluginInfo['css_files']) && is_array($jqueryPluginInfo['css_files'])){
+        foreach($jqueryPluginInfo['css_files'] as $cssFile){
+          add_css($cssFile, $cssDir, 'last');
+        }
+      }
+    }
+  }
+  return false;
+}

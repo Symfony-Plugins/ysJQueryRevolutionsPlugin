@@ -36,6 +36,9 @@ function jquery_ajax($configurations = null, $isInternal = false){
       $prefix = (isset($configurations['onNoConfirmation'])) ? sprintf('} else {%s} ', $configurations['onNoConfirmation']) . $prefix: '}'. $prefix;
       $suffix .= sprintf("if(confirm('%s')){ ",$configurations['confirmation']);
     }
+
+
+
     if(isset($configurations['listener']) && is_array($configurations['listener']) ){
         $listener =  $configurations['listener'];
         $selector =  (isset($listener['selector'])) ? $listener['selector'] : 'document';
@@ -206,7 +209,7 @@ function jquery_periodically_ajax($configurations = null){
 function jquery_ajax_form($selector,$configurations, $submit = false , $isInternal = false){
     $configurations['data'] = (isset($configurations['data']))? 'dataForm + "&" +' .  $configurations['data'] : 'dataForm';
     return  add_jquery_support(
-            '#myForm',
+            $selector,
             'submit',
             like_function(
               sprintf(
@@ -579,7 +582,9 @@ function ui_ajax_pattern($configuration){
     if(isset($configuration['url'])){           $pattern .= toJQueryOption('url', $configuration['url']); }
     if(isset($configuration['username'])){      $pattern .= toJQueryOption('username', $configuration['username']); }
     if(isset($configuration['xhr'])){           $pattern .= toJQueryOption('xhr', $configuration['xhr'], true); }
-    $pattern = substr($pattern,0,(strlen($pattern)) - 1);
+
+    if($pattern != '{')
+      $pattern = substr($pattern,0,(strlen($pattern)) - 1);
     $pattern .= '}';
   }
   return $pattern;
@@ -751,6 +756,27 @@ function toJsArgument($value, $isFunction = false){
     }
   return $pattern;
 }
+
+function add_js($filesName, $path, $position='last'){
+  if(!is_array($filesName)){
+    sfContext::getInstance()->getResponse()->addJavascript($path . $filesName, $position);
+  }else{
+    foreach ($filesName as $files){
+      sfContext::getInstance()->getResponse()->addJavascript($path . $files, $position);
+    }
+  }
+}
+
+function add_css($filesName, $path, $position='last'){
+  if(!is_array($filesName)){
+    sfContext::getInstance()->getResponse()->addStylesheet($path . $filesName, $position);
+  }else{
+    foreach ($filesName as $files){
+      sfContext::getInstance()->getResponse()->addStylesheet($path . $files, $position);
+    }
+  }
+}
+
 
 /**
  * Internal function don't use.

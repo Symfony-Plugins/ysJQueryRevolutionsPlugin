@@ -40,6 +40,11 @@ class jquery_demoActions extends sfActions
     return sfView::SUCCESS;
   }
 
+  public function executeAutocomplete()
+  {
+    return sfView::SUCCESS;
+  }
+
   public function executeEffectsExample(){
     return sfView::SUCCESS;
   }

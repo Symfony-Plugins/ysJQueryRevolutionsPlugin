@@ -13,7 +13,14 @@ all:
     ys_jquery_images: /ysJQueryRevolutionsPlugin/images
     ys_jquery_plugins_folder: /ysJQueryRevolutionsPlugin/js/jquery/plugins
 
-    plugins:
+    ys_jquery_plugins:
       auto_complete:
-        js_files:
-        css_files:
+        local: true
+        js_files:  [jquery.autocomplete.pack.js, jquery.bgiframe.min.js]
+        css_files: [jquery.autocomplete.css]
+        default_options:
+          odd_class:  ui-state-default
+          even_class: ui-state-hover
+          over_class: ui-state-active
+
+

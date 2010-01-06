@@ -462,10 +462,17 @@ Load a remote page using an HTTP request
 
 *Changelog*
 -----------
+***2010-10-01 1.0.4 STABLE***
+
+ * oyepez003: added the add_css and add_js internal functions
+ * oyepez003: added the options ['condition', 'onFailureCondition', 'confirmation', 'onNoConfirmation'] available for jquery_ajax() & jquery_ajax_form()
+ * oyepez003: added autocomplete support (ysJQueryAutocompleteHelper) see the documentation
+
+***2009-15-12 1.0.3 STABLE***
+
+ * oyepez003: added the core_get_jquery_var() function
+
 ***2009-22-11 0.0.1 BETA***
 
  * oyepez003: Initial release
 
-***2009-15-12 1.0.3 STABLE***
-
- * oyepez003: add the core_get_jquery_var() function
