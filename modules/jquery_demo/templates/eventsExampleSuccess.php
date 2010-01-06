@@ -248,8 +248,14 @@ echo jquery_ajax_form(
         'url' => url_for('jquery_demo/sayhello'),
         'success' =>  like_function("$('#divResults').html(data)" , 'data'),
         'data' => "'anotherParam=helloworld'",
+        'confirmation' => 'Do you want ajax submit',
+        'onNoConfirmation' => 'alert("Not submitted")',
+        'condition' => '$("#chkCondition").attr("checked") == true',
+        'onFailureCondition' => 'alert("Check the submit option")',
         'type' => 'POST'))?>
 <div id="divResults"></div>
+<br>
+<b>Condition for Submit:</b> <input type="checkbox" id="chkCondition" checked="false" />
 
 
 

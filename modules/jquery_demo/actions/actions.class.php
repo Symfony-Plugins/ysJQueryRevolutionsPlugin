@@ -1,10 +1,10 @@
 <?php
 
 /**
- * jquery actions.
+ * jquery_demo actions.
  *
- * @package    jquery_demo
- * @subpackage ysJQueryRevolutionsPlugin
+ * @package    ysJQueryRevolutionsPlugin
+ * @subpackage jquery_demo
  * @author     Omar Yepez
  */
 class jquery_demoActions extends sfActions

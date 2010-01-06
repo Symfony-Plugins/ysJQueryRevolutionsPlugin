@@ -26,13 +26,18 @@ Frameworks: <strong><span id="divResults"></span></strong>
                 'selector' => '#lnkReloadAjax',
                 'event' => 'click'),
             'url' => url_for('jquery_demo/getjson'),
+            'confirmation' => 'Do you want ajax submit',
+            'onNoConfirmation' => 'alert("Not submitted")',
+            'condition' => '$("#chkCondition").attr("checked") == true',
+            'onFailureCondition' => 'alert("Check the submit option")',
             'dataType' => 'json' ,
             'success' =>  like_function("$('#divResults').html(data.frameworks.toString())" , 'data'),
             'data' => "'cboIdLenguage=' + 2"));
 ?>
-
+<br>
+<b>Condition for Submit:</b> <input type="checkbox" id="chkCondition" checked="false" />
+<br>
 <hr>
-
 <br>
 <h3>Ajax button - example</h3>
 

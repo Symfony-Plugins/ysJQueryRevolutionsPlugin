@@ -11,6 +11,8 @@ Frameworks: <strong><span id="divResults"></span></strong>
                 'event' => 'click'),
             'url' => url_for('jquery_demo/getjson'),
             'dataType' => 'json' ,
+            'confirmation' => 'Do you want ajax submit',
+            'onNoConfirmation' => 'alert("Not submitted")',
             'success' =>  like_function("$('#divResults').html(data.frameworks.toString())" , 'data'),
             'data' => "'cboIdLenguage=' + Math.ceil(Math.random() * 3)",
             'type' => 'GET'));
