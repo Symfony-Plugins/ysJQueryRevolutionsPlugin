@@ -317,6 +317,15 @@ function jquery_toggle_event($selector, $functions){
   return dry_toggle_hover_events('toggle', $selector, $functions);
 }
 
+/**
+ * Execute immediately a javascript function
+ * @param string $function The function code
+ * @param string $selector A jQuery Selector
+ * @param string $selector A jQuery Event
+ */
+function jquery_execute($function, $selector = 'document', $event = 'ready'){
+  return add_jquery_support($selector,$event, like_function($function));
+}
 
 /**
  * Simulates hovering (moving the mouse on, and off, an object).
@@ -470,7 +479,7 @@ function core_get_jq_alert_message($message){
  * @param string $accesors Accesor for the jQuery object
  * @return string jQuery syntax
  */
-function jquery_support($selector , $events = 'ready' , $args ="function(){return false;}", $unescapeId = true, $accesors = '', $addSeparator = true){
+function jquery_support($selector , $events = 'ready' , $args ="", $unescapeId = true, $accesors = '', $addSeparator = true){
   if(is_array($events)){
     $jquery = '';
     foreach($events as $event => $arg){
@@ -485,7 +494,7 @@ function jquery_support($selector , $events = 'ready' , $args ="function(){retur
 /**
  * Internal function don't use.
  */
-function jquery_sintax_builder($selector , $events = 'ready' , $args ="function(){return false;}", $unescapeId = true, $accesors = '', $addSeparator = true){
+function jquery_sintax_builder($selector , $events = 'ready' , $args ="", $unescapeId = true, $accesors = '', $addSeparator = true){
     $separator = ($addSeparator == true) ? ';' : '';
     if(!is_null($selector)){
       if(is_array($selector) && sizeof($selector) > 1){
@@ -653,14 +662,25 @@ function return_jquery($configurations, $sintax){
   $finalSintax = $sintax;
   if(is_array($configurations) && isset($configurations['listener']) ){
       $listener = $configurations['listener'];
-      if(isset($listener['event']) && isset($listener['selector'])){
+      if((isset($listener['event']) || isset($listener['oneEvent'])) && isset($listener['selector'])){
+        $listener['event'] = (isset($listener['oneEvent'])) ? $listener['oneEvent'] : $listener['event'];
         $finalSintax = '';
-        if(isset($listener['before'])){
-          $finalSintax .= add_jquery_support($listener['selector'],$listener['event'],$listener['before']);
-        }
-          $finalSintax .= add_jquery_support($listener['selector'],$listener['event'],like_function($sintax));
-        if(isset($listener['after'])){
-          $finalSintax .= add_jquery_support($listener['selector'],$listener['event'],$listener['after']);
+        if(isset($listener['oneEvent'])){
+          if(isset($listener['before'])){
+            $finalSintax .= jquery_execute(jquery_one_event($listener['selector'],$listener['event'],$listener['before']));
+          }
+            $finalSintax .= jquery_execute(jquery_one_event($listener['selector'], $listener['event'] , like_function($sintax)));
+          if(isset($listener['after'])){
+            $finalSintax .= jquery_execute(jquery_one_event($listener['selector'],$listener['event'],$listener['after']));
+          }
+        }else{
+          if(isset($listener['before'])){
+            $finalSintax .= add_jquery_support($listener['selector'],$listener['event'],$listener['before']);
+          }
+            $finalSintax .= add_jquery_support($listener['selector'],$listener['event'],like_function($sintax));
+          if(isset($listener['after'])){
+            $finalSintax .= add_jquery_support($listener['selector'],$listener['event'],$listener['after']);
+          }
         }
       }
   }

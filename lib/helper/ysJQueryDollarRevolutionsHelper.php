@@ -317,6 +317,15 @@ function jquery_toggle_event($selector, $functions){
   return dry_toggle_hover_events('toggle', $selector, $functions);
 }
 
+/**
+ * Execute immediately a javascript function
+ * @param string $function The function code
+ * @param string $selector A jQuery Selector
+ * @param string $selector A jQuery Event
+ */
+function jquery_execute($function, $selector = 'document', $event = 'ready'){
+  return add_jquery_support($selector,$event, like_function($function));
+}
 
 /**
  * Simulates hovering (moving the mouse on, and off, an object).

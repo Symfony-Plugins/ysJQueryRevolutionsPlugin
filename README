@@ -125,7 +125,35 @@ First Parameter is the body functions.
 
 	eval("function(myArg1, myArg2){
 	alert('Hello + ' myArg1); alert('Hello + ' myArg2);
-	})";
+	})"; ?>
+
+<br>
+*The New Helper **jquery_execute()**:*
+To  execute immediately a javascript or jquery function
+
+	[php]
+	<?php/* BEFORE the creation of jquery_execute function
+      echo add_jquery_support(
+            'document',
+            'ready' ,
+            like_function(
+              jquery_toggle_event(
+                'li',
+                array(
+                  like_function('$(this).css({"list-style-type":"disc", "color":"blue"});'),
+                  like_function('$(this).css({"list-style-type":"disc", "color":"red"});'),
+                  like_function('$(this).css({"list-style-type":"", "color":"yellow"});'),
+              )))); */
+			  
+	/* Now with jquery_execute*/
+	
+	echo jquery_execute(
+         jquery_toggle_event(
+           'li',
+           array(
+             like_function('$(this).css({"list-style-type":"disc", "color":"blue"});'),
+             like_function('$(this).css({"list-style-type":"disc", "color":"red"});'),
+             like_function('$(this).css({"list-style-type":"", "color":"yellow"});')))); ?>
 
 <br>
 *Adding **click** event:*
@@ -424,8 +452,10 @@ Load a remote page using an HTTP request
 	* eval_function
 	* jquery_serialize
 	* jquery_serialize_array
-	* jquery_get()
-	* jquery_set()
+	* jquery_get
+	* jquery_set
+	* add_css
+	* add_js
 
   * AJAX [documentation](http://docs.jquery.com/Ajax "Ajax")
 	* jquery_ajax
@@ -443,15 +473,21 @@ Load a remote page using an HTTP request
 	* jquery_execute_effect
 
   * EVENTS [documentation](http://docs.jquery.com/Events "Events")
-	* jquery_live_event()
-	* jquery_die_event()
-	* jquery_toggle_event()
-	* jquery_hover_event()
-	* jquery_bind_event()
-	* jquery_one_event()
-	* jquery_unbind_event()
-	* jquery_trigger_event()
-	* jquery_trigger_handler_event()
+	* jquery_live_event
+	* jquery_die_event
+	* jquery_toggle_event
+	* jquery_hover_event
+	* jquery_bind_event
+	* jquery_one_event
+	* jquery_unbind_event
+	* jquery_trigger_event
+	* jquery_trigger_handler_event
+  
+  * ysUtilHelper 
+ 	* boolean_for_javascript
+	* json_encode
+	* set_jquery_plugins_configuration_files
+	* merge_plugin_defaults_options
 
 
 *Todo*
@@ -464,7 +500,8 @@ Load a remote page using an HTTP request
 -----------
 ***2010-10-01 1.0.4 STABLE***
 
- * oyepez003: added the add_css and add_js internal functions
+ * oyepez003: added the internal functions add_css , add_js internal , set_jquery_plugins_configuration_files and merge_plugin_defaults_options
+ * oyepez003: added the jquery_execute function to execute immediately a javascript or jquery function
  * oyepez003: added the options ['condition', 'onFailureCondition', 'confirmation', 'onNoConfirmation'] available for jquery_ajax() & jquery_ajax_form()
  * oyepez003: added autocomplete support (ysJQueryAutocompleteHelper) see the documentation
 

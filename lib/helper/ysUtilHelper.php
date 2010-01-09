@@ -96,3 +96,15 @@ function set_jquery_plugins_configuration_files($id, $type = ''){
   }
   return false;
 }
+
+function merge_plugin_defaults_options($id, $configuration = array()){
+  $pluginInfo = sfConfig::get('app_ys_jquery_plugins', null);
+  $pluginInfo = (isset($pluginInfo[$id])) ? $pluginInfo[$id] : array();
+  $pluginDefaults = (isset($pluginInfo['default_options'])) ? $pluginInfo['default_options'] : array();
+  if(is_array($pluginDefaults) && sizeof($pluginDefaults) > 0){
+    $configuration = array_merge($configuration,$pluginDefaults);
+  }
+  return $configuration;
+}
+
+function ys_util_exist(){}
